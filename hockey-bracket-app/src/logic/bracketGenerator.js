@@ -1,30 +1,29 @@
 // utils/bracketGenerator.js
 
 /**
- * Generate NHL playoff bracket matchups from manually entered round 1 pairings.
+ * Generate NHL playoff bracket matchups from manually entered round 1 teams.
+ * Assumes teams are entered in pairing order (e.g. [A1, A2, B1, B2, ...]).
  *
- * @param {Array} easternMatchups - Array of 4 objects with { teamA, teamB } for the East
- * @param {Array} westernMatchups - Array of 4 objects with { teamA, teamB } for the West
- * @returns {Object} - Structured bracket data
+ * @param {Array} eastTeams - Flat array of 8 east team objects
+ * @param {Array} westTeams - Flat array of 8 west team objects
+ * @returns {Object} - Structured bracket with matchups per conference
  */
-export function generateNHLBracket(easternMatchups, westernMatchups) {
+export function generateNHLBracket(eastTeams, westTeams) {
   return {
-    east: generateConferenceMatchups(easternMatchups),
-    west: generateConferenceMatchups(westernMatchups),
+    east: generateConferenceMatchups(eastTeams),
+    west: generateConferenceMatchups(westTeams),
   };
 }
 
-/**
- * Simply maps each matchup into a consistent structure.
- *
- * @param {Array} matchups - Array of { teamA, teamB }
- * @returns {Array} - Formatted matchups
- */
-function generateConferenceMatchups(matchups) {
-  return matchups.map(({ teamA, teamB }) => ({
-    teamA,
-    teamB,
-    winsA: 0,
-    winsB: 0,
-  }));
+function generateConferenceMatchups(teams) {
+  const matchups = [];
+  for (let i = 0; i < teams.length; i += 2) {
+    matchups.push({
+      teamA: teams[i],
+      teamB: teams[i + 1],
+      winsA: 0,
+      winsB: 0,
+    });
+  }
+  return matchups;
 }

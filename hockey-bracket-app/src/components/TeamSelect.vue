@@ -1,84 +1,141 @@
 <template>
-    <div class="w-full">
-      <label :for="id" class="block text-sm font-medium text-gray-700 mb-1">
-        {{ label }}
-      </label>
-      <div class="relative">
-        <input
-          :id="id"
-          type="text"
-          class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          v-model="inputValue"
-          @input="onInput"
-          @focus="showDropdown = true"
-          @blur="hideDropdown"
-          :placeholder="placeholder"
-          autocomplete="off"
-          :aria-expanded="showDropdown.toString()"
-        />
-        <ul
-          v-if="showDropdown && filteredOptions.length"
-          class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto sm:text-sm"
+  <div class="relative w-full flex items-center space-x-2">
+    <img v-if="selectedTeam && search" :src="selectedTeam.logo" class="w-6 h-6" />
+    <div class="relative w-full">
+      <input
+        type="text"
+        class="w-full border rounded p-2 pr-8"
+        :placeholder="placeholder"
+        v-model="search"
+        @input="onInput"
+        @keydown.down.prevent="onArrowDown"
+        @keydown.up.prevent="onArrowUp"
+        @keydown.enter.prevent="onEnter"
+        @blur="onBlur"
+        @focus="onInput"
+      />
+      <button
+        v-if="search"
+        class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-black pointer-events-auto"
+        @mousedown.prevent="clearSelection"
+        tabindex="-1"
+        aria-label="Clear selection"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 8.586L4.707 3.293a1 1 0 10-1.414 1.414L8.586 10l-5.293 5.293a1 1 0 101.414 1.414L10 11.414l5.293 5.293a1 1 0 001.414-1.414L11.414 10l5.293-5.293a1 1 0 00-1.414-1.414L10 8.586z" clip-rule="evenodd" />
+        </svg>
+      </button>
+      <ul
+        v-if="showDropdown && filteredTeams.length"
+        class="absolute z-10 w-full bg-white border border-gray-300 max-h-60 overflow-y-auto"
+      >
+        <li
+          v-for="(team, index) in filteredTeams"
+          :key="team.name"
+          @mousedown.prevent="selectTeam(team)"
+          :class="[
+            'p-2 flex items-center cursor-pointer hover:bg-gray-200',
+            { 'bg-blue-100': index === highlightedIndex }
+          ]"
         >
-          <li
-            v-for="(option, index) in filteredOptions"
-            :key="option.abbr"
-            class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-indigo-600 hover:text-white"
-            @mousedown.prevent="selectOption(option)"
-          >
-            <div class="flex items-center">
-              <img :src="option.logo" alt="" class="h-5 w-5 flex-shrink-0 rounded-full" />
-              <span class="ml-3 block truncate">
-                {{ option.name }} ({{ option.abbr }})
-              </span>
-            </div>
-          </li>
-        </ul>
-      </div>
+          <img :src="team.logo" alt="" class="w-6 h-6 mr-2" />
+          {{ team.name }}
+        </li>
+      </ul>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    props: {
-      modelValue: { type: Object, default: null },
-      options: { type: Array, required: true },
-      id: { type: String, default: 'team-select' },
-      label: { type: String, default: 'Team' },
-      placeholder: { type: String, default: 'Type team name...' }
-    },
-    data() {
-      return {
-        inputValue: this.modelValue?.name || '',
-        showDropdown: false
-      };
-    },
-    computed: {
-      filteredOptions() {
-        const search = this.inputValue.toLowerCase();
-        return this.options.filter(option =>
-          option.name.toLowerCase().includes(search) ||
-          option.abbr.toLowerCase().includes(search)
-        );
-      }
-    },
-    watch: {
-      modelValue(newVal) {
-        this.inputValue = newVal?.name || '';
-      }
-    },
-    methods: {
-      selectOption(option) {
-        this.$emit('update:modelValue', option);
-        this.inputValue = option.name;
-        this.showDropdown = false;
-      },
-      onInput() {
-        this.showDropdown = true;
-      },
-      hideDropdown() {
-        setTimeout(() => this.showDropdown = false, 100);
-      }
+  </div>
+</template>
+
+<script setup>
+import { ref, watch, computed } from 'vue';
+import { NHL_TEAMS } from '@/data/nhlTeams';
+
+const props = defineProps({
+  modelValue: Object,
+  placeholder: String,
+  conference: String, // 'east' or 'west'
+  takenTeams: Array // new prop: array of already selected team names or abbrs
+});
+const emit = defineEmits(['update:modelValue']);
+
+const allTeams = props.conference === 'west' ? NHL_TEAMS.west : NHL_TEAMS.east;
+
+const search = ref('');
+const selectedTeam = ref(props.modelValue || null);
+const showDropdown = ref(false);
+const highlightedIndex = ref(-1);
+
+const filteredTeams = computed(() =>
+  allTeams.filter((team) => {
+    const isMatch = team.name.toLowerCase().includes(search.value.toLowerCase());
+    const isTaken = props.takenTeams?.some(t => t === team.name || t === team.id);
+    const isSelected = selectedTeam.value?.name === team.name;
+    return isMatch && (!isTaken || isSelected);
+  })
+);
+
+watch(() => props.modelValue, (newVal) => {
+  selectedTeam.value = newVal;
+  search.value = newVal?.name || '';
+});
+
+watch(search, (newVal) => {
+  if (!newVal) {
+    selectedTeam.value = null;
+    emit('update:modelValue', null);
+  }
+});
+
+function onInput() {
+  showDropdown.value = true;
+  highlightedIndex.value = 0;
+}
+
+function selectTeam(team) {
+  selectedTeam.value = team;
+  search.value = team.name;
+  showDropdown.value = false;
+  emit('update:modelValue', team);
+}
+
+function clearSelection() {
+  selectedTeam.value = null;
+  search.value = '';
+  emit('update:modelValue', null);
+}
+
+function onBlur() {
+  setTimeout(() => {
+    showDropdown.value = false;
+    const match = filteredTeams.value[highlightedIndex.value] || filteredTeams.value[0];
+    if (match && search.value.toLowerCase() === match.name.toLowerCase().slice(0, search.value.length)) {
+      selectTeam(match);
+    } else if (!search.value) {
+      clearSelection();
     }
-  };
-  </script>
+  }, 100);
+}
+
+function onArrowDown() {
+  if (highlightedIndex.value < filteredTeams.value.length - 1) {
+    highlightedIndex.value++;
+  }
+}
+
+function onArrowUp() {
+  if (highlightedIndex.value > 0) {
+    highlightedIndex.value--;
+  }
+}
+
+function onEnter() {
+  const team = filteredTeams.value[highlightedIndex.value];
+  if (team) {
+    selectTeam(team);
+  }
+}
+</script>
+
+<style scoped>
+/* Optional: tweak styling */
+</style>
