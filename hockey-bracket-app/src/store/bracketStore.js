@@ -51,9 +51,12 @@ export const useBracketStore = defineStore('bracket', {
 
     updateWinCount(teamId, round, winCount) {
       if (!this.roundWins[teamId]) return
-      this.roundWins[teamId][round] = winCount
+      const updated = [...this.roundWins[teamId]]
+      updated[round] = winCount
+      this.roundWins[teamId] = updated // This triggers reactivity
       localStorage.setItem('bracketState', JSON.stringify(this.$state))
     },
+    
     
     resetBracket() {
       this.configured = false

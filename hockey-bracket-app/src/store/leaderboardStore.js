@@ -12,18 +12,17 @@ export const useLeaderboardStore = defineStore('leaderboard', {
 
   actions: {
     recompute(participants, roundWins) {
-      this.leaders = participants.map(p => {
-        const { round1, round2, round3, round4, total } = calculatePoints(p.picks, roundWins)
-        return {
-          id: p.id,
-          name: p.name,
-          round1,
-          round2,
-          round3,
-          round4,
-          total
-        }
-      }).sort((a, b) => b.total - a.total) // descending order
-    }
+        console.log('[Leaderboard] Recomputing with', participants.length, 'participants')
+        this.leaders = participants.map(p => {
+          const points = calculatePoints(p.picks, roundWins)
+          console.log(' ->', p.name, points)
+          return {
+            id: p.id,
+            name: p.name,
+            ...points
+          }
+        }).sort((a, b) => b.total - a.total)
+      }
+      
   }
 })

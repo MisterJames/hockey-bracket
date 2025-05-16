@@ -1,43 +1,47 @@
 <template>
-    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white p-6 rounded shadow-lg max-w-sm w-full text-center">
+    <div class="modal-backdrop">
+      <div class="modal-content">
         <h2 class="text-lg font-bold mb-4">Add Participant</h2>
-  
-        <input
-          v-model="name"
-          type="text"
-          placeholder="Enter your name"
-          class="border border-gray-300 rounded px-4 py-2 w-full mb-4"
-        />
-  
-        <div class="flex justify-end space-x-2">
-          <button @click="$emit('cancel')" class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded">Cancel</button>
-          <button
-            :disabled="!name.trim()"
-            @click="submit"
-            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded disabled:opacity-50"
-          >
-            Start Picks
-          </button>
-        </div>
+        <form @submit.prevent="handleConfirm">
+          <input
+            ref="inputRef"
+            v-model="name"
+            type="text"
+            class="w-full p-2 border rounded mb-4"
+            placeholder="Enter name"
+          />
+          <div class="flex justify-end gap-2">
+            <button type="button" @click="$emit('cancel')" class="btn-secondary">
+              Cancel
+            </button>
+            <button type="submit" class="btn-primary">
+              Start Picks
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </template>
   
+  
   <script setup>
-  import { ref } from 'vue';
-  import { useRouter } from 'vue-router';
-  import { useParticipantStore } from '@/store/participantStore'; // to be created
+  import { ref, onMounted, watch, nextTick } from 'vue'
   
-  const emit = defineEmits(['cancel']);
-  const name = ref('');
-  const router = useRouter();
-  const store = useParticipantStore();
+  const name = ref('')
+  const inputRef = ref(null)
   
-  function submit() {
-    const id = store.addParticipant(name.value.trim());
-    emit('cancel'); // Close modal
-    router.push(`/picks/${id}`);
+  const emit = defineEmits(['confirm', 'cancel'])
+  
+  function handleConfirm() {
+    if (name.value.trim()) {
+      emit('confirm', name.value.trim())
+      name.value = ''
+    }
   }
+  
+  // Auto-focus input when modal is mounted or reopened
+  onMounted(() => {
+    nextTick(() => inputRef.value?.focus())
+  })
   </script>
   

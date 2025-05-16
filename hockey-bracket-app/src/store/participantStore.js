@@ -4,14 +4,18 @@ import { watch } from 'vue';
 
 export const useParticipantStore = defineStore('participants', {
     state: () => {
-        const saved = localStorage.getItem('participantState');
-        const defaultState = { participants: [] };
+        const saved = localStorage.getItem('participantState')
+        const defaultState = { participants: [], loaded: false }
         try {
-          return Object.assign(defaultState, JSON.parse(saved));
+          const parsed = JSON.parse(saved)
+          defaultState.participants = parsed || []
         } catch (e) {
-          return defaultState;
+          // fail silently
         }
+        defaultState.loaded = true
+        return defaultState
       }
+      
       ,
 
   actions: {

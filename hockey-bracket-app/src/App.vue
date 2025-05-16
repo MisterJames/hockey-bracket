@@ -22,23 +22,18 @@ const participants = useParticipantStore()
 const bracket = useBracketStore()
 const leaderboard = useLeaderboardStore()
 
-// Save participant state to localStorage on change
-watch(
-  () => participants.participants,
-  (newVal) => {
-    localStorage.setItem('participantState', JSON.stringify(newVal))
-  },
-  { deep: true }
-)
-
 // Recompute leaderboard on participant or bracket changes
 watch(
-  () => [participants.participants, bracket.roundWins],
-  () => leaderboard.recompute(participants.participants, bracket.roundWins),
+  () => [participants.loaded, participants.participants, bracket.roundWins],
+  ([loaded]) => {
+    if (loaded) {
+      leaderboard.recompute(participants.participants, bracket.roundWins)
+    }
+  },
   { deep: true, immediate: true }
 )
-</script>
 
+</script>
 
 <style scoped>
 /* Global app styling remains here if needed */
