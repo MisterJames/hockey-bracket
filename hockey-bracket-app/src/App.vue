@@ -1,40 +1,60 @@
+<script setup>
+import { useRoute } from 'vue-router'
+import { computed } from 'vue'
+
+const route = useRoute()
+const isPrintView = computed(() => route.path === '/print')
+
+import { useLeaderboardSync } from '@/composables/useLeaderboardSync'
+useLeaderboardSync()
+</script>
+
 <template>
-  <div class="min-h-screen bg-gray-100 text-gray-900 font-sans">
-    <!-- Header -->
-    <header class="bg-blue-900 text-white px-6 py-4 shadow-md">
-      <h1 class="text-2xl font-bold">🏒 Hockey Bracket Tracker</h1>
+  <div
+    :class="[
+      'text-gray-900 font-sans',
+      isPrintView ? '' : 'min-h-screen bg-gray-100'
+    ]"
+  >
+    <!-- Header (hidden in print view) -->
+    <header
+      v-if="!isPrintView"
+      class="bg-blue-900 text-white px-6 py-4 shadow-md"
+    >
+      <h1 class="text-2xl font-bold">🏒 Playoff Bracket Tracker</h1>
     </header>
 
     <!-- Main view -->
-    <main class="px-6 pb-12">
+    <main :class="[isPrintView ? 'p-0 m-0' : 'px-6 pb-12']">
       <router-view />
     </main>
   </div>
 </template>
 
-<script setup>
-import { watch } from 'vue'
-import { useParticipantStore } from '@/store/participantStore'
-import { useBracketStore } from '@/store/bracketStore'
-import { useLeaderboardStore } from '@/store/leaderboardStore'
 
-const participants = useParticipantStore()
-const bracket = useBracketStore()
-const leaderboard = useLeaderboardStore()
+<style>
+@media print {
+  body,
+  html {
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
 
-// Recompute leaderboard on participant or bracket changes
-watch(
-  () => [participants.loaded, participants.participants, bracket.roundWins],
-  ([loaded]) => {
-    if (loaded) {
-      leaderboard.recompute(participants.participants, bracket.roundWins)
-    }
-  },
-  { deep: true, immediate: true }
-)
+  #app {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: white !important;
+  }
 
-</script>
+  header,
+  nav,
+  footer {
+    display: none !important;
+  }
 
-<style scoped>
-/* Global app styling remains here if needed */
+  .bracket-column {
+    break-inside: avoid;
+  }
+}
 </style>

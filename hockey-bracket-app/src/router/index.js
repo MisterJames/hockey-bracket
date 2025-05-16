@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import BracketSetup from '@/components/BracketSetup.vue'
 import Dashboard from '@/views/Dashboard.vue';
+import PrintView from '@/views/PrintView.vue';
 import { useBracketStore } from '@/store/bracketStore'
 import ParticipantPicks from '@/views/ParticipantPicks.vue'; // we'll create this
 
@@ -8,6 +9,7 @@ const routes = [
   { path: '/', name: 'Home', component: Dashboard },
   { path: '/setup', name: 'Setup', component: BracketSetup },
   { path: '/picks/:id', name: 'Picks', component: ParticipantPicks, props: true },
+  { path: '/print', name: 'Print', component: PrintView },
 ];
 
 
