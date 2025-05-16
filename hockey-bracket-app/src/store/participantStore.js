@@ -1,10 +1,18 @@
 import { defineStore } from 'pinia';
 import { nanoid } from 'nanoid';
+import { watch } from 'vue';
 
 export const useParticipantStore = defineStore('participants', {
-  state: () => ({
-    participants: []
-  }),
+    state: () => {
+        const saved = localStorage.getItem('participantState');
+        const defaultState = { participants: [] };
+        try {
+          return Object.assign(defaultState, JSON.parse(saved));
+        } catch (e) {
+          return defaultState;
+        }
+      }
+      ,
 
   actions: {
     addParticipant(name) {
@@ -15,7 +23,8 @@ export const useParticipantStore = defineStore('participants', {
         picks: {
           west: [],
           east: [],
-          final: []
+          final: [],
+          finalPick: null
         }
       });
       return id;

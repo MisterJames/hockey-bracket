@@ -13,8 +13,32 @@
 </template>
 
 <script setup>
-// no logic needed here now
+import { watch } from 'vue'
+import { useParticipantStore } from '@/store/participantStore'
+import { useBracketStore } from '@/store/bracketStore'
+import { useLeaderboardStore } from '@/store/leaderboardStore'
+
+const participants = useParticipantStore()
+const bracket = useBracketStore()
+const leaderboard = useLeaderboardStore()
+
+// Save participant state to localStorage on change
+watch(
+  () => participants.participants,
+  (newVal) => {
+    localStorage.setItem('participantState', JSON.stringify(newVal))
+  },
+  { deep: true }
+)
+
+// Recompute leaderboard on participant or bracket changes
+watch(
+  () => [participants.participants, bracket.roundWins],
+  () => leaderboard.recompute(participants.participants, bracket.roundWins),
+  { deep: true, immediate: true }
+)
 </script>
+
 
 <style scoped>
 /* Global app styling remains here if needed */
