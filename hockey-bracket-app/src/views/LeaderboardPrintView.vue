@@ -1,6 +1,6 @@
 <template>
     <div class="print-wrapper">
-      <h1 class="text-3xl font-bold text-center my-6">Playoff Bracket (SVG Format)</h1>
+      <h1 class="text-3xl font-bold text-center my-6">Playoff Bracket Tracker</h1>
   
       <BracketSvg class="mb-5" />
       <Leaderboard class="mt-5" :showFinalPick="true" />
