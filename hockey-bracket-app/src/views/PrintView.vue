@@ -19,32 +19,14 @@
   
       <Leaderboard/>
   
-      <p class="text-right text-xs text-gray-500 mt-4" v-if="lastUpdated">
-        Updated {{ formatDate(lastUpdated) }}
-      </p>
     </div>
   </template>
   
   <script setup>
   import BracketColumn from '@/components/BracketColumn.vue'
   import Leaderboard from '@/components/Leaderboard.vue'
-  import { useLeaderboardStore } from '@/store/leaderboardStore'
-  import { computed } from 'vue'
   
-  const leaderboard = useLeaderboardStore()
   
-  const lastUpdated = computed(() => leaderboard.lastUpdated)
-  
-  function formatDate(date) {
-    const d = new Date(date)
-    return d.toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    })
-  }
   </script>
   
   <style scoped>
