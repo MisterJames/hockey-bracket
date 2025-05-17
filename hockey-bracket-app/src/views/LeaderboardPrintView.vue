@@ -2,17 +2,14 @@
     <div class="print-wrapper">
       <h1 class="text-3xl font-bold text-center my-6">Playoff Bracket (SVG Format)</h1>
   
-      <BracketSvg class="mb-10" />
-      <Leaderboard class="mt-10" />
+      <BracketSvg class="mb-5" />
+      <Leaderboard class="mt-5" />
   
-      <p class="text-right text-xs text-gray-500 mt-4" v-if="lastUpdated">
-        Updated {{ formatDate(lastUpdated) }}
-      </p>
     </div>
   </template>
   
   <script setup>
-  import BracketSvg from '@/components/BracketSvg.vue'
+  import BracketSvg from '@/svg/BracketSvg.vue'
   import Leaderboard from '@/components/Leaderboard.vue'
   import { useLeaderboardStore } from '@/store/leaderboardStore'
   import { computed } from 'vue'
