@@ -70,7 +70,7 @@ function handleParticipantConfirm(name) {
 }
 
 function openPrintView() {
-  window.open('/print', '_blank')
+  window.open('/leaderboard', '_blank')
 }
 
 // Check if the active element is a form field
