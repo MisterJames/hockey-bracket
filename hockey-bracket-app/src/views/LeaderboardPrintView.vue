@@ -3,7 +3,7 @@
       <h1 class="text-3xl font-bold text-center my-6">Playoff Bracket (SVG Format)</h1>
   
       <BracketSvg class="mb-5" />
-      <Leaderboard class="mt-5" />
+      <Leaderboard class="mt-5" :showFinalPick="true" />
   
     </div>
   </template>
@@ -15,8 +15,6 @@
   import { computed } from 'vue'
   
   const leaderboard = useLeaderboardStore()
-  
-  const lastUpdated = computed(() => leaderboard.lastUpdated)
   
   function formatDate(date) {
     const d = new Date(date)

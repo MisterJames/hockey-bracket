@@ -1,5 +1,12 @@
 <template>
     <svg :width="svgWidth" :height="svgHeight" xmlns="http://www.w3.org/2000/svg">
+
+        <defs>
+            <filter id="drop-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="#999" flood-opacity="0.4"/>
+            </filter>
+        </defs>
+
       <!-- Round 1 West -->
       <g v-for="(match, index) in bracket.matchups?.west?.[0] ?? []" :key="'w1-' + match.id">
         <MatchupSvg
@@ -92,11 +99,11 @@
         />
         <LineConnector
             v-if="bracket.matchups?.east?.[2]?.[Math.floor(index / 2)]"
-            :from="{ 
+            :to="{ 
                 x: startX + roundSpacing * 5 , 
                 y: index * matchSpacingY * 2 + matchSpacingY / 2 + boxHeight / 2 
             }"
-            :to="{ 
+            :from="{ 
                 x: startX + roundSpacing * 4 + boxWidth, 
                 y: Math.floor(index / 2) * matchSpacingY * 4 + matchSpacingY + boxHeight 
             }"
@@ -115,8 +122,8 @@
         />
         <LineConnector
           v-if="bracket.matchups?.east?.[1]?.[Math.floor(index / 2)]"
-          :from="{ x: startX + roundSpacing * 6, y: index * matchSpacingY + boxHeight / 2 }"
-          :to="{ x: startX + roundSpacing * 5 + boxWidth, y: Math.floor(index / 2) * matchSpacingY * 2 + matchSpacingY / 2 + boxHeight / 2 }"
+          :to="{ x: startX + roundSpacing * 6, y: index * matchSpacingY + boxHeight / 2 }"
+          :from="{ x: startX + roundSpacing * 5 + boxWidth, y: Math.floor(index / 2) * matchSpacingY * 2 + matchSpacingY / 2 + boxHeight / 2 }"
         />
       </g>
     </svg>

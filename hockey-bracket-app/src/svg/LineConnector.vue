@@ -1,22 +1,46 @@
 <template>
-    <line
-      :x1="from.x"
-      :y1="from.y"
-      :x2="to.x"
-      :y2="to.y"
-      :stroke="stroke"
-      :stroke-width="strokeWidth"
-      :stroke-dasharray="dashed ? '4,2' : null"
-    />
+    <g>
+      <!-- Connector line (elbow shape) -->
+      <path
+  :d="pathData"
+  fill="none"
+  stroke="#888"
+  stroke-width="1"
+  stroke-linejoin="round"
+/>
+
+  
+    </g>
   </template>
   
   <script setup>
+  import { computed } from 'vue'
+  
   const props = defineProps({
-    from: { type: Object, required: true }, // { x, y }
-    to: { type: Object, required: true },   // { x, y }
-    stroke: { type: String, default: '#999' },
-    strokeWidth: { type: Number, default: 1 },
-    dashed: { type: Boolean, default: false }
+    from: Object, // { x, y }
+    to: Object     // { x, y }
   })
+  
+  // Create elbow-style path: ┐ or ┘
+  const pathData = computed(() => {
+  const r = 6
+  const start = props.from
+  const end = props.to
+  const midX = (start.x + end.x) / 2
+
+  // Determine vertical direction
+  const yDirection = end.y > start.y ? 1 : -1
+
+  return `
+    M ${start.x} ${start.y}
+    L ${midX - r} ${start.y}
+    Q ${midX} ${start.y} ${midX} ${start.y + r * yDirection}
+    L ${midX} ${end.y - r * yDirection}
+    Q ${midX} ${end.y} ${midX + r} ${end.y}
+    L ${end.x} ${end.y}
+  `
+})
+
+
   </script>
   
