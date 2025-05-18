@@ -159,7 +159,7 @@
   
   function savePicks() {
     participant.picks = JSON.parse(JSON.stringify(picks));
+    store.saveParticipants(); // Persist to localStorage
     router.push('/');
   }
   </script>
-  

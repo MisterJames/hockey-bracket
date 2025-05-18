@@ -34,15 +34,21 @@ export const useParticipantStore = defineStore('participants', {
         }
       }
       this.participants.push(newParticipant)
+      localStorage.setItem('participantState', JSON.stringify({ participants: this.participants }))
       return id
     },
 
     deleteAllParticipants() {
       this.participants = []
+      localStorage.setItem('participantState', JSON.stringify({ participants: this.participants }))
     },
 
     getParticipant(id) {
       return this.participants.find(p => p.id === id)
+    },
+
+    saveParticipants() {
+      localStorage.setItem('participantState', JSON.stringify({ participants: this.participants }))
     }
   }
 })

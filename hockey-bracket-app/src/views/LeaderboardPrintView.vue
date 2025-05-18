@@ -12,9 +12,23 @@
   import BracketSvg from '@/svg/BracketSvg.vue'
   import Leaderboard from '@/components/Leaderboard.vue'
   import { useLeaderboardStore } from '@/store/leaderboardStore'
-  import { computed } from 'vue'
+  import { computed, watchEffect, onMounted } from 'vue'
+  import { useLeaderboardSync } from '@/composables/useLeaderboardSync'
+  
+  useLeaderboardSync() // <-- Ensure leaderboard stays in sync
   
   const leaderboard = useLeaderboardStore()
+  
+  onMounted(() => {
+    console.log('[LeaderboardPrintView] Mounted')
+    console.log('[LeaderboardPrintView] leaderboard.leaders:', leaderboard.leaders)
+    console.log('[LeaderboardPrintView] leaderboard.lastUpdated:', leaderboard.lastUpdated)
+  })
+  
+  watchEffect(() => {
+    console.log('[LeaderboardPrintView] leaders changed:', leaderboard.leaders)
+    console.log('[LeaderboardPrintView] lastUpdated:', leaderboard.lastUpdated)
+  })
   
   function formatDate(date) {
     const d = new Date(date)
@@ -58,4 +72,3 @@
     }
   }
   </style>
-  
