@@ -2,42 +2,24 @@
   <div class="relative w-full flex items-center space-x-2">
     <img v-if="selectedTeam && search" :src="selectedTeam.logo" class="w-6 h-6" />
     <div class="relative w-full">
-      <input
-        type="text"
-        class="w-full border rounded p-2 pr-8"
-        :placeholder="placeholder"
-        v-model="search"
-        @input="onInput"
-        @keydown.down.prevent="onArrowDown"
-        @keydown.up.prevent="onArrowUp"
-        @keydown.enter.prevent="onEnter"
-        @blur="onBlur"
-        @focus="onInput"
-      />
-      <button
-        v-if="search"
+      <input type="text" class="w-full border rounded p-2 pr-8" :placeholder="placeholder" v-model="search"
+        @input="onInput" @keydown.down.prevent="onArrowDown" @keydown.up.prevent="onArrowUp"
+        @keydown.enter.prevent="onEnter" @blur="onBlur" @focus="onInput" />
+      <button v-if="search"
         class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-black pointer-events-auto"
-        @mousedown.prevent="clearSelection"
-        tabindex="-1"
-        aria-label="Clear selection"
-      >
+        @mousedown.prevent="clearSelection" tabindex="-1" aria-label="Clear selection">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M10 8.586L4.707 3.293a1 1 0 10-1.414 1.414L8.586 10l-5.293 5.293a1 1 0 101.414 1.414L10 11.414l5.293 5.293a1 1 0 001.414-1.414L11.414 10l5.293-5.293a1 1 0 00-1.414-1.414L10 8.586z" clip-rule="evenodd" />
+          <path fill-rule="evenodd"
+            d="M10 8.586L4.707 3.293a1 1 0 10-1.414 1.414L8.586 10l-5.293 5.293a1 1 0 101.414 1.414L10 11.414l5.293 5.293a1 1 0 001.414-1.414L11.414 10l5.293-5.293a1 1 0 00-1.414-1.414L10 8.586z"
+            clip-rule="evenodd" />
         </svg>
       </button>
-      <ul
-        v-if="showDropdown && filteredTeams.length"
-        class="absolute z-10 w-full bg-white border border-gray-300 max-h-60 overflow-y-auto"
-      >
-        <li
-          v-for="(team, index) in filteredTeams"
-          :key="team.name"
-          @mousedown.prevent="selectTeam(team)"
-          :class="[
-            'p-2 flex items-center cursor-pointer hover:bg-gray-200',
-            { 'bg-blue-100': index === highlightedIndex }
-          ]"
-        >
+      <ul v-if="showDropdown && filteredTeams.length"
+        class="absolute z-10 w-full bg-white border border-gray-300 max-h-60 overflow-y-auto">
+        <li v-for="(team, index) in filteredTeams" :key="team.name" @mousedown.prevent="selectTeam(team)" :class="[
+          'p-2 flex items-center cursor-pointer hover:bg-gray-200',
+          { 'bg-blue-100': index === highlightedIndex }
+        ]">
           <img :src="team.logo" alt="" class="w-6 h-6 mr-2" />
           {{ team.name }}
         </li>

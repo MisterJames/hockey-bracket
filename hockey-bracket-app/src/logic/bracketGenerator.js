@@ -1,16 +1,14 @@
-// utils/bracketGenerator.js
-
 /**
  * Generate full multi-round bracket structure
- * @param {Array} eastTeams - Ordered team array for East (8 teams)
- * @param {Array} westTeams - Ordered team array for West (8 teams)
- * @returns {Object} Bracket with west, east, and final
+ * @param {Array} eastTeams 
+ * @param {Array} westTeams 
+ * @returns {Object} 
  */
 export function generateNHLBracket(eastTeams, westTeams) {
   return {
     east: [generateRoundMatchups(eastTeams)],
     west: [generateRoundMatchups(westTeams)],
-    final: [[]] // Round 4: Stanley Cup Final
+    final: [[]] // Round 4: Cup Final
   };
 }
 

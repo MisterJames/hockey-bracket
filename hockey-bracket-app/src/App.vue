@@ -10,17 +10,12 @@ useLeaderboardSync()
 </script>
 
 <template>
-  <div
-    :class="[
-      'text-gray-900 font-sans',
-      isPrintView ? '' : 'min-h-screen bg-gray-100'
-    ]"
-  >
+  <div :class="[
+    'text-gray-900 font-sans',
+    isPrintView ? '' : 'min-h-screen bg-gray-100'
+  ]">
     <!-- Header (hidden in print view) -->
-    <header
-      v-if="!isPrintView"
-      class="bg-blue-900 text-white px-6 py-4 shadow-md"
-    >
+    <header v-if="!isPrintView" class="bg-blue-900 text-white px-6 py-4 shadow-md">
       <h1 class="text-2xl font-bold">🏒 Playoff Bracket Tracker</h1>
     </header>
 
@@ -34,6 +29,7 @@ useLeaderboardSync()
 
 <style>
 @media print {
+
   body,
   html {
     margin: 0;

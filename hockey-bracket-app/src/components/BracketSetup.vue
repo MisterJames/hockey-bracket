@@ -6,57 +6,34 @@
       <div>
         <h3 class="font-semibold mb-2">Western Conference</h3>
         <div v-for="(matchup, index) in westernMatchups" :key="index" class="mb-4">
-          <TeamSelect
-            v-model="matchup.teamA"
-            placeholder="Team A"
-            conference="west"
-            :taken-teams="selectedTeamNamesExcept(matchup.teamA)"
-          />
-          <TeamSelect
-            v-model="matchup.teamB"
-            placeholder="Team B"
-            conference="west"
-            :taken-teams="selectedTeamNamesExcept(matchup.teamB)"
-          />
+          <TeamSelect v-model="matchup.teamA" placeholder="Team A" conference="west"
+            :taken-teams="selectedTeamNamesExcept(matchup.teamA)" />
+          <TeamSelect v-model="matchup.teamB" placeholder="Team B" conference="west"
+            :taken-teams="selectedTeamNamesExcept(matchup.teamB)" />
         </div>
       </div>
 
       <div>
         <h3 class="font-semibold mb-2">Eastern Conference</h3>
         <div v-for="(matchup, index) in easternMatchups" :key="index" class="mb-4">
-          <TeamSelect
-            v-model="matchup.teamA"
-            placeholder="Team A"
-            conference="east"
-            :taken-teams="selectedTeamNamesExcept(matchup.teamA)"
-          />
-          <TeamSelect
-            v-model="matchup.teamB"
-            placeholder="Team B"
-            conference="east"
-            :taken-teams="selectedTeamNamesExcept(matchup.teamB)"
-          />
+          <TeamSelect v-model="matchup.teamA" placeholder="Team A" conference="east"
+            :taken-teams="selectedTeamNamesExcept(matchup.teamA)" />
+          <TeamSelect v-model="matchup.teamB" placeholder="Team B" conference="east"
+            :taken-teams="selectedTeamNamesExcept(matchup.teamB)" />
         </div>
       </div>
     </div>
 
     <div class="mt-6 space-x-4">
-      <button
-  :class="[
-    'font-semibold py-2 px-4 rounded',
-    isFormComplete ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-  ]"
-  :disabled="!isFormComplete"
-  @click="submitBracket"
->
-  Save Bracket
-</button>
+      <button :class="[
+        'font-semibold py-2 px-4 rounded',
+        isFormComplete ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+      ]" :disabled="!isFormComplete" @click="submitBracket">
+        Save Bracket
+      </button>
 
 
-      <button
-        class="bg-gray-300 hover:bg-gray-400 text-black font-semibold py-2 px-4 rounded"
-        @click="clearBracket"
-      >
+      <button class="bg-gray-300 hover:bg-gray-400 text-black font-semibold py-2 px-4 rounded" @click="clearBracket">
         Clear Bracket
       </button>
     </div>

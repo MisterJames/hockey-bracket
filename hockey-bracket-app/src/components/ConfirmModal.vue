@@ -9,7 +9,8 @@
       </p>
       <div class="flex justify-center gap-4">
         <button @click="$emit('cancel')" class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded">Cancel</button>
-        <button @click="$emit('confirm')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Confirm</button>
+        <button @click="$emit('confirm')"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Confirm</button>
       </div>
     </div>
   </div>

@@ -26,7 +26,7 @@ export const useBracketStore = defineStore('bracket', {
       state.teams.east.length === 8 &&
       state.teams.west.length === 8,
   }
-  
+
   ,
 
   actions: {
@@ -56,8 +56,8 @@ export const useBracketStore = defineStore('bracket', {
       this.roundWins[teamId] = updated // This triggers reactivity
       localStorage.setItem('bracketState', JSON.stringify(this.$state))
     },
-    
-    
+
+
     resetBracket() {
       this.configured = false
       this.teams.east = []
@@ -65,7 +65,7 @@ export const useBracketStore = defineStore('bracket', {
       this.matchups.east = []
       this.matchups.west = []
       this.roundWins = {}
-    
+
       localStorage.removeItem('bracketState')
       localStorage.setItem('bracketState', JSON.stringify(this.$state))
     },

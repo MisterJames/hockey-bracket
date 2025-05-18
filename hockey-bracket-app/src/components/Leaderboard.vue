@@ -14,11 +14,7 @@
         </tr>
       </thead>
       <transition-group tag="tbody" name="fade" class="divide-y">
-        <tr
-          v-for="p in leaderboard.leaders"
-          :key="p.id"
-          class="bg-white"
-        >
+        <tr v-for="p in leaderboard.leaders" :key="p.id" class="bg-white">
           <td class="px-4 py-2 font-medium text-gray-800">
             {{ p.rank }}
             <span v-if="p.movement === 'up'">🔺</span>
@@ -32,30 +28,19 @@
           <td class="px-4 py-2 text-center font-bold">{{ p.total }}</td>
 
           <td v-if="showFinalPick" class="whitespace-nowrap px-4 py-2 text-sm text-gray-900 flex items-center gap-2">
-  <template v-if="picksMap[p.id]">
-    <img
-      :src="picksMap[p.id].logo"
-      :alt="picksMap[p.id].id"
-      class="h-5 w-5 inline-block"
-    />
-    <span class="text-gray-600">
-      beats
-    </span>
-    <template v-if="runnerUpMap[p.id]">
-      <img
-        :src="runnerUpMap[p.id].logo"
-        :alt="runnerUpMap[p.id].id"
-        class="h-5 w-5 inline-block"
-      />
-    </template>
-    <template v-else>
-      <span class="italic text-gray-400">(TBD)</span>
-    </template>
-  </template>
-</td>
-
-
-
+            <template v-if="picksMap[p.id]">
+              <img :src="picksMap[p.id].logo" :alt="picksMap[p.id].id" class="h-5 w-5 inline-block" />
+              <span class="text-gray-600">
+                beats
+              </span>
+              <template v-if="runnerUpMap[p.id]">
+                <img :src="runnerUpMap[p.id].logo" :alt="runnerUpMap[p.id].id" class="h-5 w-5 inline-block" />
+              </template>
+              <template v-else>
+                <span class="italic text-gray-400">(TBD)</span>
+              </template>
+            </template>
+          </td>
 
         </tr>
       </transition-group>
@@ -68,7 +53,7 @@
 </template>
 
 <script setup>
-import { onMounted, watchEffect , computed } from 'vue'
+import { onMounted, watchEffect, computed } from 'vue'
 import { useLeaderboardStore } from '@/store/leaderboardStore'
 import { useParticipantStore } from '@/store/participantStore'
 
@@ -127,6 +112,7 @@ function formatDate(dateStr) {
 .fade-leave-active {
   transition: all 0.3s ease;
 }
+
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;

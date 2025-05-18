@@ -4,46 +4,34 @@
       <h2 class="text-xl font-bold mb-4">Stanley Cup Playoffs</h2>
 
       <div v-for="conference in ['west', 'east']" :key="conference" class="mb-10">
-  <h3 class="text-lg font-semibold mb-2">
-    {{ conference === 'west' ? 'Western Conference' : 'Eastern Conference' }}
-  </h3>
+        <h3 class="text-lg font-semibold mb-2">
+          {{ conference === 'west' ? 'Western Conference' : 'Eastern Conference' }}
+        </h3>
 
-  <div class="flex space-x-6">
-    <div v-for="(round, roundIndex) in bracket[conference]" :key="roundIndex" class="mb-6">
-      <div class="relative group mb-1">
-        <div class="font-medium text-sm text-gray-500">
-          Round {{ roundIndex + 1 }}
+        <div class="flex space-x-6">
+          <div v-for="(round, roundIndex) in bracket[conference]" :key="roundIndex" class="mb-6">
+            <div class="relative group mb-1">
+              <div class="font-medium text-sm text-gray-500">
+                Round {{ roundIndex + 1 }}
+              </div>
+              <button
+                class="absolute right-0 top-0 text-xs bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200 opacity-0 group-hover:opacity-100 transition"
+                @click="confirmClearRound(conference, roundIndex)">
+                Clear Round
+              </button>
+            </div>
+
+
+            <Matchup v-for="(match, matchIndex) in round" :key="matchIndex" :match="match" :round="roundIndex"
+              :conference="conference" :matchIndex="matchIndex" @clickTeam="handleClick" />
+          </div>
         </div>
-        <button
-          class="absolute right-0 top-0 text-xs bg-red-100 text-red-700 px-2 py-1 rounded hover:bg-red-200 opacity-0 group-hover:opacity-100 transition"
-          @click="confirmClearRound(conference, roundIndex)"
-        >
-          Clear Round
-        </button>
       </div>
 
-
-      <Matchup
-        v-for="(match, matchIndex) in round"
-        :key="matchIndex"
-        :match="match"
-        :round="roundIndex"
-        :conference="conference"
-        :matchIndex="matchIndex"
-        @clickTeam="handleClick"
-      />
-    </div>
-  </div>
-</div>
-
-<ConfirmModal
-  v-if="modalTeam"
-  :team="Object.keys(modalTeam).length ? modalTeam : null"
-  :opponent="Object.keys(modalOpponent).length ? modalOpponent : null"
-  :message="roundToClear ? `Are you sure you want to clear Round ${roundToClear.round + 1} – ${roundToClear.conference.toUpperCase()}?` : ''"
-  @confirm="roundToClear ? confirmRoundClear() : confirmWinner()"
-  @cancel="cancelModal"
-/>
+      <ConfirmModal v-if="modalTeam" :team="Object.keys(modalTeam).length ? modalTeam : null"
+        :opponent="Object.keys(modalOpponent).length ? modalOpponent : null"
+        :message="roundToClear ? `Are you sure you want to clear Round ${roundToClear.round + 1} – ${roundToClear.conference.toUpperCase()}?` : ''"
+        @confirm="roundToClear ? confirmRoundClear() : confirmWinner()" @cancel="cancelModal" />
 
 
 
@@ -88,22 +76,22 @@ function confirmRoundClear() {
 
   // 2. Clear downstream rounds
   for (let r = round + 1; r < rounds.length; r++) {
-  rounds[r] = rounds[r].filter(match =>
-    match.teamA !== null || match.teamB !== null
-  );
+    rounds[r] = rounds[r].filter(match =>
+      match.teamA !== null || match.teamB !== null
+    );
 
-  if (rounds[r].length === 0) {
-    // optionally remove the round if it's now empty
-    rounds.splice(r, 1);
-    r--; // re-check this index since we removed an item
-  } else {
-    rounds[r].forEach(match => {
-      match.teamA = null;
-      match.teamB = null;
-      match.winner = null;
-    });
+    if (rounds[r].length === 0) {
+      // optionally remove the round if it's now empty
+      rounds.splice(r, 1);
+      r--; // re-check this index since we removed an item
+    } else {
+      rounds[r].forEach(match => {
+        match.teamA = null;
+        match.teamB = null;
+        match.winner = null;
+      });
+    }
   }
-}
 
 
   // 3. Done
