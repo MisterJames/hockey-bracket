@@ -43,6 +43,11 @@ export const useParticipantStore = defineStore('participants', {
       localStorage.setItem('participantState', JSON.stringify({ participants: this.participants }))
     },
 
+    deleteParticipant(id) {
+      this.participants = this.participants.filter(p => p.id !== id)
+      localStorage.setItem('participantState', JSON.stringify({ participants: this.participants }))
+    },
+
     getParticipant(id) {
       return this.participants.find(p => p.id === id)
     },

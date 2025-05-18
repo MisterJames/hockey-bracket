@@ -20,14 +20,14 @@
         </div>
       </div>
 
-      <div class="grid md:grid-cols-7 gap-4 items-start">
+      <div class="grid md:grid-cols-9 gap-4 items-start">
         <!-- left side -->
-        <div class="md:col-span-4">
+        <div class="md:col-span-5">
           <PlayoffBracket />
         </div>
         <!-- right side -->
-        <div class="md:col-span-3">
-          <Leaderboard />
+        <div class="md:col-span-4">
+          <Leaderboard :showDelete="true" />
         </div>
       </div>
 

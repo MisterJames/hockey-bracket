@@ -11,10 +11,15 @@
           <th class="px-4 py-2">Round 4</th>
           <th class="px-4 py-2">Total</th>
           <th v-if="showFinalPick" class="px-4 py-2">Final Pick</th>
+          <th v-if="showDelete" class="px-4 py-2"></th>
         </tr>
       </thead>
       <transition-group tag="tbody" name="fade" class="divide-y">
-        <tr v-for="p in leaderboard.leaders" :key="p.id" class="bg-white">
+        <tr
+          v-for="p in leaderboard.leaders"
+          :key="p.id"
+          class="bg-white group"
+        >
           <td class="px-4 py-2 font-medium text-gray-800">
             {{ p.rank }}
             <span v-if="p.movement === 'up'">🔺</span>
@@ -41,7 +46,13 @@
               </template>
             </template>
           </td>
-
+          <td v-if="showDelete" class="px-4 py-2 text-center">
+            <button
+              @click="confirmDelete(p)"
+              class="text-red-600 hover:text-red-800 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+              title="Delete participant"
+            >🗑</button>
+          </td>
         </tr>
       </transition-group>
     </table>
@@ -49,16 +60,29 @@
     <div class="text-sm text-gray-500 mt-4" v-if="leaderboard.lastUpdated">
       Updated {{ formatDate(leaderboard.lastUpdated) }}
     </div>
+
+    <ConfirmModal
+      v-if="deleteModal.visible"
+      :show="deleteModal.visible"
+      :message="`Delete participant '${deleteModal.participant?.name}'? This cannot be undone.`"
+      @confirm="deleteParticipant"
+      @cancel="deleteModal.visible = false"
+    />
   </div>
 </template>
 
 <script setup>
-import { onMounted, watchEffect, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useLeaderboardStore } from '@/store/leaderboardStore'
 import { useParticipantStore } from '@/store/participantStore'
+import ConfirmModal from '@/components/ConfirmModal.vue'
 
 const props = defineProps({
   showFinalPick: {
+    type: Boolean,
+    default: false
+  },
+  showDelete: {
     type: Boolean,
     default: false
   }
@@ -105,6 +129,27 @@ function formatDate(dateStr) {
   })
 }
 
+// Delete participant logic
+const deleteModal = ref({
+  visible: false,
+  participant: null
+})
+
+function confirmDelete(participant) {
+  deleteModal.value.participant = participant
+  deleteModal.value.visible = true
+}
+
+function deleteParticipant() {
+  if (deleteModal.value.participant) {
+    console.log('Deleting participant:', deleteModal.value.participant.id)
+    participants.deleteParticipant(deleteModal.value.participant.id)
+    deleteModal.value.participant = null
+  } else {
+    console.log('No participant to delete')
+  }
+  deleteModal.value.visible = false
+}
 </script>
 
 <style scoped>
