@@ -1,51 +1,51 @@
 <template>
-  <div class="p-4 space-y-4">
-    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-      <div class="flex gap-2 flex-wrap">
-        <button
-          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          @click="showModal = true"
-        >
-          + Add Participant
-        </button>
-        <button
-          class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-          @click="participantStore.deleteAllParticipants()"
-        >
-          🗑 Delete All Participants
-        </button>
-        <button
-          class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
-          @click="bracketStore.resetBracket()"
-        >
-          🔄 Reset Bracket
-        </button>
-        <button
-        class="bg-slate-500 text-white px-3 py-2 rounded hover:bg-slate-600"
-        @click="openPrintView"
-      >
-        🖨 Print View
-      </button>
-
+  <div class="flex justify-center">
+    <div class="w-full max-w-7xl mx-auto p-4 space-y-4">
+      <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+        <div class="flex gap-2 flex-wrap">
+          <button
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            @click="showModal = true"
+          >
+            + Add Participant
+          </button>
+          <button
+            class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+            @click="participantStore.deleteAllParticipants()"
+          >
+            🗑 Delete All Participants
+          </button>
+          <button
+            class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+            @click="bracketStore.resetBracket()"
+          >
+            🔄 Reset Bracket
+          </button>
+          <button
+            class="bg-slate-500 text-white px-3 py-2 rounded hover:bg-slate-600"
+            @click="openPrintView"
+          >
+            🖨 Print View
+          </button>
+        </div>
       </div>
-    </div>
 
-    <div class="grid md:grid-cols-2 gap-4 items-start">
-      <!-- left side -->
-      <div>
-        <PlayoffBracket />
+      <div class="grid md:grid-cols-2 gap-4 items-start">
+        <!-- left side -->
+        <div>
+          <PlayoffBracket />
+        </div>
+        <!-- right side -->
+        <Leaderboard />
       </div>
-      <!-- right side -->
-      <Leaderboard />
+
+      <!-- Participant Modal -->
+      <ParticipantModal
+        v-if="showModal"
+        @confirm="handleParticipantConfirm"
+        @cancel="showModal = false"
+      />
     </div>
-
-
-    <!-- Participant Modal -->
-    <ParticipantModal
-      v-if="showModal"
-      @confirm="handleParticipantConfirm"
-      @cancel="showModal = false"
-    />
   </div>
 </template>
 
