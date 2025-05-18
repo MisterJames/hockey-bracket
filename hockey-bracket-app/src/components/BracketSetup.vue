@@ -64,13 +64,15 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useBracketStore } from '@/store/bracketStore';
 import TeamSelect from '@/components/TeamSelect.vue';
 
 const store = useBracketStore();
 const router = useRouter();
+
+const TEMP_FORM_KEY = 'bracketSetupFormState';
 
 const easternMatchups = ref([
   { teamA: null, teamB: null },
@@ -85,6 +87,34 @@ const westernMatchups = ref([
   { teamA: null, teamB: null },
   { teamA: null, teamB: null },
 ]);
+
+// Restore form state from localStorage if present
+onMounted(() => {
+  const saved = localStorage.getItem(TEMP_FORM_KEY);
+  if (saved) {
+    try {
+      const { east, west } = JSON.parse(saved);
+      if (Array.isArray(east) && Array.isArray(west)) {
+        easternMatchups.value = east;
+        westernMatchups.value = west;
+      }
+    } catch (e) {
+      // ignore parse errors
+    }
+  }
+});
+
+// Watch for changes and persist form state
+watch(
+  [easternMatchups, westernMatchups],
+  ([east, west]) => {
+    localStorage.setItem(
+      TEMP_FORM_KEY,
+      JSON.stringify({ east, west })
+    );
+  },
+  { deep: true }
+);
 
 function selectedTeamNamesExcept(currentTeam) {
   return [...easternMatchups.value, ...westernMatchups.value]
@@ -103,6 +133,7 @@ function submitBracket() {
   const eastTeams = easternMatchups.value.flatMap((m) => [m.teamA, m.teamB]);
   const westTeams = westernMatchups.value.flatMap((m) => [m.teamA, m.teamB]);
   store.configureBracket(eastTeams, westTeams);
+  localStorage.removeItem(TEMP_FORM_KEY); // Clear temp form state
   router.push('/');
 }
 
@@ -119,6 +150,7 @@ function clearBracket() {
     { teamA: null, teamB: null },
     { teamA: null, teamB: null },
   ];
+  localStorage.removeItem(TEMP_FORM_KEY); // Clear temp form state
   store.resetBracket();
 }
 </script>
