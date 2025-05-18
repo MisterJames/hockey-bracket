@@ -30,13 +30,15 @@
         </div>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-4 items-start">
+      <div class="grid md:grid-cols-7 gap-4 items-start">
         <!-- left side -->
-        <div>
+        <div class="md:col-span-4">
           <PlayoffBracket />
         </div>
         <!-- right side -->
-        <Leaderboard />
+        <div class="md:col-span-3">
+          <Leaderboard />
+        </div>
       </div>
 
       <!-- Participant Modal -->
