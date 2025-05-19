@@ -25,7 +25,11 @@
             <span v-if="p.movement === 'up'">🔺</span>
             <span v-else-if="p.movement === 'down'">🔻</span>
           </td>
-          <td class="px-4 py-2">{{ p.name }}</td>
+          <td class="px-4 py-2">
+            <button class="hover:underline text-blue-700" @click="showPicks(p.id)">
+              {{ p.name }}
+            </button>
+          </td>
           <td class="px-4 py-2 text-center">{{ p.round1 }}</td>
           <td class="px-4 py-2 text-center">{{ p.round2 }}</td>
           <td class="px-4 py-2 text-center">{{ p.round3 }}</td>
@@ -68,6 +72,12 @@
       @confirm="deleteParticipant"
       @cancel="deleteModal.visible = false"
     />
+
+    <ParticipantPicksModal
+      :show="picksModal.visible"
+      :participant="picksModal.participant"
+      @close="picksModal.visible = false"
+    />
   </div>
 </template>
 
@@ -76,6 +86,7 @@ import { ref, computed } from 'vue'
 import { useLeaderboardStore } from '@/store/leaderboardStore'
 import { useParticipantStore } from '@/store/participantStore'
 import ConfirmModal from '@/components/ConfirmModal.vue'
+import ParticipantPicksModal from '@/components/ParticipantPicksModal.vue'
 
 const props = defineProps({
   showFinalPick: {
@@ -149,6 +160,18 @@ function deleteParticipant() {
     console.log('No participant to delete')
   }
   deleteModal.value.visible = false
+}
+
+// Picks modal logic
+const picksModal = ref({
+  visible: false,
+  participant: null
+})
+
+function showPicks(participantId) {
+  const participant = participants.getParticipant(participantId)
+  picksModal.value.participant = participant
+  picksModal.value.visible = true
 }
 </script>
 

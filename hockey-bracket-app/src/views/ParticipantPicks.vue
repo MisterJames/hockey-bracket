@@ -13,16 +13,18 @@
               Round {{ roundIndex + 1 }}
             </div>
             <div v-for="(selected, matchIndex) in round" :key="matchIndex" class="space-y-2">
-              <div v-for="team in getMatchOptions(side, roundIndex, matchIndex)" :key="team.id">
-                <button class="w-48 flex items-center justify-between px-3 py-2 border rounded hover:bg-blue-100"
-                  :class="{
-                    'bg-blue-600 text-white': selected?.id === team.id
-                  }" @click="selectPick(side, roundIndex, matchIndex, team)">
-                  <div class="flex items-center space-x-2">
-                    <img :src="team.logo" class="w-6 h-6" />
-                    <span class="font-mono text-sm">{{ team.id }}</span>
-                  </div>
-                </button>
+              <div class="rounded-xl border border-gray-300 bg-gray-50 px-2 py-2 flex flex-col gap-1">
+                <div v-for="team in getMatchOptions(side, roundIndex, matchIndex)" :key="team.id">
+                  <button class="w-48 flex items-center justify-between px-3 py-2 border rounded hover:bg-blue-100"
+                    :class="{
+                      'bg-blue-600 text-white': selected?.id === team.id
+                    }" @click="selectPick(side, roundIndex, matchIndex, team)">
+                    <div class="flex items-center space-x-2">
+                      <img :src="team.logo" class="w-6 h-6" />
+                      <span class="font-mono text-sm">{{ team.id }}</span>
+                    </div>
+                  </button>
+                </div>
               </div>
             </div>
           </div>

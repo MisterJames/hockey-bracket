@@ -25,6 +25,38 @@ export const useBracketStore = defineStore('bracket', {
       Array.isArray(state.teams.west) &&
       state.teams.east.length === 8 &&
       state.teams.west.length === 8,
+
+    activeTeams: (state) => {
+      // Collect all teams
+      const allTeams = [...state.teams.east, ...state.teams.west];
+      // If no roundWins, all teams are active
+      if (!state.roundWins || Object.keys(state.roundWins).length === 0) return allTeams;
+
+      const eliminated = new Set();
+
+      // For each conference and each round, check matchups
+      ['east', 'west'].forEach(conf => {
+        const matchups = state.matchups[conf] || [];
+        for (let round = 0; round < matchups.length; round++) {
+          const roundMatchups = matchups[round] || [];
+          roundMatchups.forEach(match => {
+            // Defensive: skip if match or teams are missing
+            if (!match || !match.teamA || !match.teamB) return;
+            const teamA = match.teamA;
+            const teamB = match.teamB;
+            // Defensive: skip if teamA or teamB is null
+            if (!teamA || !teamB) return;
+            const winsA = state.roundWins[teamA.id]?.[round] || 0;
+            const winsB = state.roundWins[teamB.id]?.[round] || 0;
+            if (winsA === 4) eliminated.add(teamB.id);
+            if (winsB === 4) eliminated.add(teamA.id);
+          });
+        }
+      });
+
+      // Return teams that are not eliminated and are not null
+      return allTeams.filter(team => team && team.id && !eliminated.has(team.id));
+    }
   }
 
   ,
