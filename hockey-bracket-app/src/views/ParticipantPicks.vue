@@ -13,7 +13,11 @@
               Round {{ roundIndex + 1 }}
             </div>
             <div v-for="(selected, matchIndex) in round" :key="matchIndex" class="space-y-2">
-              <div class="rounded-xl border border-gray-300 bg-gray-50 px-2 py-2 flex flex-col gap-1">
+              <!-- Only show the matchup box if at least one team is present -->
+              <div
+                v-if="getMatchOptions(side, roundIndex, matchIndex).length > 0"
+                class="rounded-xl border border-gray-300 bg-gray-50 px-2 py-2 flex flex-col gap-1"
+              >
                 <div v-for="team in getMatchOptions(side, roundIndex, matchIndex)" :key="team.id">
                   <button class="w-48 flex items-center justify-between px-3 py-2 border rounded hover:bg-blue-100"
                     :class="{
@@ -26,6 +30,7 @@
                   </button>
                 </div>
               </div>
+              <!-- ...no box if no teams... -->
             </div>
           </div>
         </div>
