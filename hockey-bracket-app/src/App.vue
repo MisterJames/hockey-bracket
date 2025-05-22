@@ -1,11 +1,11 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
+import { useLeaderboardSync } from '@/composables/useLeaderboardSync'
 
 const route = useRoute()
 const isPrintView = computed(() => route.path === '/print')
 
-import { useLeaderboardSync } from '@/composables/useLeaderboardSync'
 useLeaderboardSync()
 </script>
 
